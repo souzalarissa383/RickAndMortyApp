@@ -7,23 +7,26 @@
 
 import UIKit
 
-class RMCharacterViewController: UIViewController {
-
+//Controlador para mostrar e procurar personagens
+final class RMCharacterViewController: UIViewController {
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        // Do any additional setup after loading the view.
+        view.backgroundColor = .systemBackground
+        title = "Characters"
+        
+        RMService.shared.execute(.listCharactersRequests,
+                                 expecting:RMGetAllCharactersResponse.self) { result in
+            
+            switch result{
+            case .success(let model):
+                print(String(describing: model))
+            case .failure(let error):
+                print(String(describing: error))
+            }
+            
+        }
+        
     }
     
-
-    /*
-    // MARK: - Navigation
-
-    // In a storyboard-based application, you will often want to do a little preparation before navigation
-    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        // Get the new view controller using segue.destination.
-        // Pass the selected object to the new view controller.
-    }
-    */
-
 }
