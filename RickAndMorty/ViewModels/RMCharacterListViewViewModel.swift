@@ -10,6 +10,10 @@ import UIKit
 protocol RMCharacterListViewViewModelDelegate: AnyObject {
     //carregar caracteres iniciais
     func didLoadInitialCharacters()
+    //selecionar personagem
+    func didSelectCharacter(_ character: RMCharacter)
+    func didLoadMoreCharacters(with newIndexPaths: [IndexPath])
+
     
 }
 
@@ -23,8 +27,8 @@ final class RMCharacterListViewViewModel: NSObject {
             for character in characters {
                 let viewModel = RMCharacterCollectionViewCellViewModel(
                     characterName: character.name,
-                    characterStatus: character.status,
-                    characterImageUrl: URL(string: character.image)
+                    characterStatus: .alive ,
+                    characterImageUrl: URL(string: "")
                 )
                 cellViewModels.append(viewModel)
                 
@@ -47,7 +51,7 @@ final class RMCharacterListViewViewModel: NSObject {
                 self?.characters = results
                 DispatchQueue.main.async {
                     self?.delegate?.didLoadInitialCharacters()
-                }           
+                }
             case .failure(let error):
                 print(String(describing: error))
             }
@@ -90,6 +94,12 @@ extension RMCharacterListViewViewModel: UICollectionViewDataSource, UICollection
             height: width * 1.5
         )
     }
+    
+    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
+            collectionView.deselectItem(at: indexPath, animated: true)
+            let character = characters[indexPath.row]
+            delegate?.didSelectCharacter(character)
+        }
 }
 
 

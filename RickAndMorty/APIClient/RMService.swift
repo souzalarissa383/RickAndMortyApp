@@ -49,6 +49,7 @@ final class RMService {
                 completion(.failure(error))
             }
         }
+        task.resume()
        
     }
     //Criar uma solicitacao para a URL

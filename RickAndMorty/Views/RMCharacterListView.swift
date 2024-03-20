@@ -35,8 +35,10 @@ final class RMCharacterListView: UIView {
         //opacidade
         collectionView.alpha = 0
         collectionView.translatesAutoresizingMaskIntoConstraints = false
-        collectionView.register(UICollectionViewCell.self,
-                                forCellWithReuseIdentifier: RMCharacterCollectionViewCell.cellIdentifier)
+        
+        collectionView.register(RMCharacterCollectionViewCell.self,
+                                       forCellWithReuseIdentifier: RMCharacterCollectionViewCell.cellIdentifier)
+       
         
         return collectionView
         
@@ -75,26 +77,43 @@ final class RMCharacterListView: UIView {
         collectionView.dataSource = viewModel
         collectionView.delegate = viewModel
         
-       
+        
     }
 }
 
 extension RMCharacterListView: RMCharacterListViewViewModelDelegate {
+    func didLoadMoreCharacters(with newIndexPaths: [IndexPath]) {
+        collectionView.performBatchUpdates {
+            self.collectionView.insertItems(at: newIndexPaths)
+        }
+    }
+    
+    
     func didSelectCharacter(_ character: RMCharacter) {
-          delegate?.rmCharacterListView(self, didSelectCharacter: character)
-      }
-
-      func didLoadInitialCharacters() {
-          spinner.stopAnimating()
-          collectionView.isHidden = false
-          collectionView.reloadData() // inicio da busca 
-          UIView.animate(withDuration: 0.4) {
-              self.collectionView.alpha = 1
-          }
-      }
- }
-  
-
-
-
+        delegate?.rmCharacterListView(self, didSelectCharacter: character)
+    }
+    
+    func didLoadInitialCharacters() {
+        collectionView.performBatchUpdates {
+            spinner.stopAnimating()
+            collectionView.isHidden = false
+            collectionView.reloadData()
+            UIView.animate(withDuration: 0.4) {
+                self.collectionView.alpha = 1
+            }
+        }
+        
+        
+        func didLoadInitialCharacters() {
+            spinner.stopAnimating()
+            collectionView.isHidden = false
+            collectionView.reloadData() // inicio da busca
+            UIView.animate(withDuration: 0.4) {
+                self.collectionView.alpha = 1
+            }
+            
+            
+        }
+    }
+}
 
