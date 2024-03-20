@@ -22,7 +22,7 @@ final class RMCharacterCollectionViewCellViewModel {
         self.characterImageUrl = characterImageUrl
     }
     public var characterStatusText: String {
-        return characterStatus .rawValue
+        return "Status: \(characterStatus.text)"
     }
     
     //buscar imagem

@@ -14,7 +14,7 @@ protocol RMCharacterListViewDelegate: AnyObject {
     )
 }
 final class RMCharacterListView: UIView {
-
+    
     public weak var delegate: RMCharacterListViewDelegate?
     
     private let viewModel = RMCharacterListViewViewModel()
@@ -49,6 +49,7 @@ final class RMCharacterListView: UIView {
         addSubviews(collectionView, spinner)
         addConstraints()
         spinner.startAnimating()
+        viewModel.delegate = self
         viewModel.fetchCharacters()
         setUpCollectionView()
     }
@@ -74,15 +75,26 @@ final class RMCharacterListView: UIView {
         collectionView.dataSource = viewModel
         collectionView.delegate = viewModel
         
-        DispatchQueue.main.asyncAfter(deadline: .now()+2, execute: {
-            self.spinner.startAnimating()
-            
-            self.collectionView.isHidden = false
-            
-            UIView.animate(withDuration: 0.4){
-                self.collectionView.alpha = 1
-            }
-        })
+       
     }
 }
+
+extension RMCharacterListView: RMCharacterListViewViewModelDelegate {
+    func didSelectCharacter(_ character: RMCharacter) {
+          delegate?.rmCharacterListView(self, didSelectCharacter: character)
+      }
+
+      func didLoadInitialCharacters() {
+          spinner.stopAnimating()
+          collectionView.isHidden = false
+          collectionView.reloadData() // inicio da busca 
+          UIView.animate(withDuration: 0.4) {
+              self.collectionView.alpha = 1
+          }
+      }
+ }
+  
+
+
+
 

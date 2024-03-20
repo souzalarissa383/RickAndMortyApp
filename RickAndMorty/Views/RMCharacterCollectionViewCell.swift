@@ -53,8 +53,8 @@ class RMCharacterCollectionViewCell: UICollectionViewCell {
     // colecao de restricoes referente ao titulo , status e video
     private func addConstraints() {
         NSLayoutConstraint.activate([
-            statusLabel.heightAnchor.constraint(equalToConstant: 40),
-            nameLabel.heightAnchor.constraint(equalToConstant: 40),
+            statusLabel.heightAnchor.constraint(equalToConstant: 30),
+            nameLabel.heightAnchor.constraint(equalToConstant: 30),
             
             statusLabel.leftAnchor.constraint(equalTo: contentView.leftAnchor, constant: 7),
             statusLabel.rightAnchor.constraint(equalTo: contentView.rightAnchor, constant: -7),
@@ -68,10 +68,8 @@ class RMCharacterCollectionViewCell: UICollectionViewCell {
             imageView.leftAnchor.constraint(equalTo: contentView.leftAnchor),
             imageView.rightAnchor.constraint(equalTo: contentView.rightAnchor),
             imageView.bottomAnchor.constraint(equalTo: nameLabel.topAnchor, constant: -3),
-        ])
-        
-        nameLabel.backgroundColor = .red
-        statusLabel.backgroundColor = .orange
+        ]) 
+    
         
     }
     
@@ -83,20 +81,20 @@ class RMCharacterCollectionViewCell: UICollectionViewCell {
     }
     //obter e buscar  imagem
     public func configure(with viewModel: RMCharacterCollectionViewCellViewModel) {
-           nameLabel.text = viewModel.characterName
-           statusLabel.text = viewModel.characterStatusText
-           viewModel.fetchImage { [weak self] result in
-               switch result {
-               case .success(let data):
-                   DispatchQueue.main.async {
-                       let image = UIImage(data: data)
-                       self?.imageView.image = image
-                   }
-               case .failure(let error):
-                   print(String(describing: error))
-                   break
-               }
-           }
-       }
-   }
-    
+        nameLabel.text = viewModel.characterName
+        statusLabel.text = viewModel.characterStatusText
+        viewModel.fetchImage { [weak self] result in
+            switch result {
+            case .success(let data):
+                DispatchQueue.main.async {
+                    let image = UIImage(data: data)
+                    self?.imageView.image = image
+                }
+            case .failure(let error):
+                print(String(describing: error))
+                break
+            }
+        }
+    }
+}
+
