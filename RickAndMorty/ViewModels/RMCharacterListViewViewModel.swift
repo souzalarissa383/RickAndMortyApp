@@ -29,8 +29,8 @@ final class RMCharacterListViewViewModel: NSObject {
             for character in characters {
                 let viewModel = RMCharacterCollectionViewCellViewModel(
                     characterName: character.name,
-                    characterStatus: .alive ,
-                    characterImageUrl: URL(string: "")
+                    characterStatus:character.status ,
+                    characterImageUrl: URL(string: character.image)
                 )
                 cellViewModels.append(viewModel)
                 
@@ -47,7 +47,7 @@ final class RMCharacterListViewViewModel: NSObject {
     
     public func fetchCharacters() {
         RMService.shared.execute(
-            .listEpisodesRequest,
+            .listCharactersRequests,
             expecting: RMGetAllCharactersResponse.self
         ) { [ weak self ]result in
             switch result {
@@ -95,21 +95,22 @@ extension RMCharacterListViewViewModel: UICollectionViewDataSource, UICollection
     //footer
     func collectionView(_ collectionView: UICollectionView, viewForSupplementaryElementOfKind kind: String, at indexPath: IndexPath) -> UICollectionReusableView {
         
-        guard kind == UICollectionView.elementKindSectionFooter,shouldShowLoadMoreIndicator else {
+        guard kind == UICollectionView.elementKindSectionFooter,
+              let footer = collectionView.dequeueReusableSupplementaryView(
+                ofKind: kind,
+                withReuseIdentifier: RMFooterLoadingCollectionReusableView.identifier,
+                for: indexPath
+              ) as? RMFooterLoadingCollectionReusableView else {
             fatalError("Unsupported")
         }
-        let footer = collectionView.dequeueReusableSupplementaryView(
-            ofKind: kind,
-            withReuseIdentifier: RMFooterLoadingCollectionReusableView.identifier,
-            for: indexPath
-        )
+        footer.startAnimating()
         return footer
     }
     
     func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, referenceSizeForFooterInSection section: Int) -> CGSize {
         guard shouldShowLoadMoreIndicator else {
             return .zero
-
+            
         }
         return CGSize(width: collectionView.frame.width,
                       height: 100)

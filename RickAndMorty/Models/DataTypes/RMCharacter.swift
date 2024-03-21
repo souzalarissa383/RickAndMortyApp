@@ -11,6 +11,7 @@ struct RMCharacter: Codable {
     let id: Int
     let name: String
     let species: String
+    let status: RMCharacterStatus
     let type: String
     let gender: RMCharacterGender
     let origin: RMOrigin
